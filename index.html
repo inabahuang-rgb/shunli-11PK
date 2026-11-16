@@ -100,21 +100,25 @@
         </button>
       </div>
 
-      <!-- 第二列：手機直式滿版三格分頁切換 -->
-      <nav class="grid grid-cols-4 gap-1 bg-gray-900/90 p-1 rounded-xl border border-gray-800 text-xs">
-        <button id="nav-bet-btn" onclick="switchTab('bet')" class="py-2 rounded-lg font-black transition flex items-center justify-center gap-1.5 bg-amber-500 text-black shadow">
+      <!-- 第二列：手機直式滿版五格分頁切換 -->
+      <nav class="grid grid-cols-5 gap-1 bg-gray-900/90 p-1 rounded-xl border border-gray-800 text-[10px] sm:text-xs">
+        <button id="nav-bet-btn" onclick="switchTab('bet')" class="py-1.5 sm:py-2 px-0.5 rounded-lg font-black transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 bg-amber-500 text-black shadow leading-tight">
           <i class="fa-solid fa-crosshairs"></i>
           <span>下注登記</span>
         </button>
-        <button id="nav-odds-btn" onclick="switchTab('odds')" class="py-2 rounded-lg font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5">
+        <button id="nav-odds-btn" onclick="switchTab('odds')" class="py-1.5 sm:py-2 px-0.5 rounded-lg font-bold text-gray-400 hover:text-white transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 leading-tight">
           <i class="fa-solid fa-chart-pie"></i>
           <span>戰況試算</span>
         </button>
-        <button id="nav-leaderboard-btn" onclick="switchTab('leaderboard')" class="py-2 rounded-lg font-bold text-amber-400 hover:text-white transition flex items-center justify-center gap-1.5">
+        <button id="nav-leaderboard-btn" onclick="switchTab('leaderboard')" class="py-1.5 sm:py-2 px-0.5 rounded-lg font-bold text-amber-400 hover:text-white transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 leading-tight">
           <i class="fa-solid fa-trophy"></i>
           <span>個人排行</span>
         </button>
-        <button id="nav-admin-btn" onclick="switchTab('admin')" class="py-2 rounded-lg font-bold text-gray-400 hover:text-white transition flex items-center justify-center gap-1.5">
+        <button id="nav-details-btn" onclick="switchTab('details')" class="py-1.5 sm:py-2 px-0.5 rounded-lg font-bold text-gray-400 hover:text-white transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 leading-tight text-center">
+          <i class="fa-solid fa-list-check"></i>
+          <span>各組下注明細</span>
+        </button>
+        <button id="nav-admin-btn" onclick="switchTab('admin')" class="py-1.5 sm:py-2 px-0.5 rounded-lg font-bold text-gray-400 hover:text-white transition flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 leading-tight">
           <i class="fa-solid fa-table-list"></i>
           <span>總表管理</span>
         </button>
@@ -322,6 +326,49 @@
           <span class="text-[11px] text-slate-500 font-mono">順立 11月經典PK賽</span>
         </div>
 
+      </div>
+    </section>
+
+    <!-- 各組下注明細分頁 (合併加總注數 + 可點擊折疊) -->
+    <section id="tab-details" class="hidden space-y-4">
+      <div class="glass-panel rounded-2xl p-4 border border-gray-800 space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-gray-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-black text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-list-check text-amber-400"></i>
+                <span>各組下注明細</span>
+              </h2>
+              <span id="details-source-badge" class="text-[10px] bg-amber-500/20 border border-amber-500/40 text-amber-300 px-2 py-0.5 rounded-full font-bold">
+                合併累計
+              </span>
+            </div>
+            <p class="text-[11px] text-gray-400 mt-0.5">
+              同組同方重複下注已自動合併加總 • 點擊各組標題可展開或收合名單
+            </p>
+          </div>
+          <div class="flex items-center gap-1.5 self-start sm:self-auto shrink-0">
+            <button onclick="toggleAllDetailCards(true)" class="px-2 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-[11px] font-bold border border-gray-700 transition active:scale-95">
+              全部展開
+            </button>
+            <button onclick="toggleAllDetailCards(false)" class="px-2 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-[11px] font-bold border border-gray-700 transition active:scale-95">
+              全部收合
+            </button>
+            <button onclick="fetchMatchDetails(true)" class="px-2.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-amber-300 text-[11px] font-bold border border-gray-700 transition flex items-center gap-1 active:scale-95">
+              <i id="details-refresh-icon" class="fa-solid fa-arrows-rotate"></i>
+              <span>重新整理</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="details-cloud-notice" class="hidden bg-amber-950/30 border border-amber-500/30 rounded-xl px-3 py-2 text-[11px] text-amber-200 leading-relaxed">
+          <i class="fa-solid fa-circle-info text-amber-400 mr-1"></i>
+          <span>無法連線至雲端試算表，目前暫時顯示本機已送出之暫存紀錄。</span>
+        </div>
+
+        <div id="details-container" class="space-y-2.5">
+          <!-- JS 動態生成 8 組可折疊下注明細 -->
+        </div>
       </div>
     </section>
 
@@ -1783,7 +1830,7 @@
     }
 
     function switchTab(tab) {
-      const tabs = ['bet', 'leaderboard', 'odds', 'admin'];
+      const tabs = ['bet', 'odds', 'leaderboard', 'details', 'admin'];
       tabs.forEach(t => {
         const sec = document.getElementById(`tab-${t}`);
         const navBtn = document.getElementById(`nav-${t}-btn`);
@@ -1804,6 +1851,9 @@
       }
       if (tab === 'odds') {
         renderOddsTab();
+      }
+      if (tab === 'details') {
+        fetchMatchDetails(false);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -2071,6 +2121,7 @@
         } catch(e) {}
         renderAdminTable();
         renderOddsTab();
+        renderMatchDetails(submissions, 'local');
         showToast('已清空本機暫存（主辦人雲端試算表正本不受影響）');
       }
     }
@@ -2084,6 +2135,324 @@
       toastTimeout = setTimeout(() => {
         toast.classList.add('opacity-0', 'pointer-events-none');
       }, 2600);
+    }
+
+    // ==========================================
+    // 各組下注明細（合併加總注數 + 可點擊折疊）
+    // ==========================================
+    const expandedDetailCards = new Set();
+    let lastDetailsData = null;
+    let lastDetailsSource = 'local';
+
+    function toggleDetailCard(matchId) {
+      if (expandedDetailCards.has(matchId)) {
+        expandedDetailCards.delete(matchId);
+      } else {
+        expandedDetailCards.add(matchId);
+      }
+      const body = document.getElementById(`detail-body-${matchId}`);
+      const icon = document.getElementById(`detail-chevron-${matchId}`);
+      if (body) body.classList.toggle('hidden', !expandedDetailCards.has(matchId));
+      if (icon) icon.classList.toggle('rotate-180', expandedDetailCards.has(matchId));
+    }
+
+    function toggleAllDetailCards(expandAll) {
+      MATCHUPS.forEach(m => {
+        if (expandAll) {
+          expandedDetailCards.add(m.id);
+        } else {
+          expandedDetailCards.delete(m.id);
+        }
+        const body = document.getElementById(`detail-body-${m.id}`);
+        const icon = document.getElementById(`detail-chevron-${m.id}`);
+        if (body) body.classList.toggle('hidden', !expandAll);
+        if (icon) icon.classList.toggle('rotate-180', expandAll);
+      });
+    }
+
+    const OFFICIAL_SHEET_ID = "1srO3QPRUZD6boywRnGBMmQKHfch8ypahTkLVNkjt7Zk";
+    const OFFICIAL_SHEET_NAME = "下注登記名冊";
+
+    function fetchMatchDetails(manualClick) {
+      const icon = document.getElementById('details-refresh-icon');
+      if (icon) icon.classList.add('fa-spin');
+      const notice = document.getElementById('details-cloud-notice');
+
+      const gvizUrl = `https://docs.google.com/spreadsheets/d/${OFFICIAL_SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(OFFICIAL_SHEET_NAME)}&t=${Date.now()}`;
+
+      try {
+        fetch(gvizUrl)
+          .then(res => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+          })
+          .then(text => {
+            const start = text.indexOf('{');
+            const end = text.lastIndexOf('}');
+            if (start === -1 || end === -1) throw new Error('Invalid gviz response');
+            const json = JSON.parse(text.slice(start, end + 1));
+            const rows = (json && json.table && Array.isArray(json.table.rows)) ? json.table.rows : [];
+            if (icon) icon.classList.remove('fa-spin');
+            if (notice) notice.classList.add('hidden');
+            renderMatchDetailsFromSheetRows(rows);
+            if (manualClick) showToast('已從 Google 試算表同步最新各組下注明細！');
+          })
+          .catch(() => {
+            fetchMatchDetailsViaJsonp(manualClick);
+          });
+      } catch (e) {
+        fetchMatchDetailsViaJsonp(manualClick);
+      }
+    }
+
+    function fetchMatchDetailsViaJsonp(manualClick) {
+      const icon = document.getElementById('details-refresh-icon');
+      const notice = document.getElementById('details-cloud-notice');
+      const cbName = '__gvizDetailsCb_' + Date.now();
+      let settled = false;
+
+      const cleanup = (scriptEl) => {
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+      };
+
+      const script = document.createElement('script');
+      const timer = setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        cleanup(script);
+        if (icon) icon.classList.remove('fa-spin');
+        if (notice) notice.classList.remove('hidden');
+        renderMatchDetails(getLocalSubmissionsList(), 'local');
+        if (manualClick) showToast('試算表連線逾時，暫時顯示本機紀錄');
+      }, 6000);
+
+      window[cbName] = function(json) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        cleanup(script);
+        if (icon) icon.classList.remove('fa-spin');
+        if (notice) notice.classList.add('hidden');
+        const rows = (json && json.table && Array.isArray(json.table.rows)) ? json.table.rows : [];
+        renderMatchDetailsFromSheetRows(rows);
+        if (manualClick) showToast('已從 Google 試算表同步最新各組下注明細！');
+      };
+
+      script.onerror = function() {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        cleanup(script);
+        if (icon) icon.classList.remove('fa-spin');
+        if (notice) notice.classList.remove('hidden');
+        renderMatchDetails(getLocalSubmissionsList(), 'local');
+        if (manualClick) showToast('無法讀取雲端試算表，暫時顯示本機紀錄');
+      };
+
+      script.src = `https://docs.google.com/spreadsheets/d/${OFFICIAL_SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cbName}&headers=1&sheet=${encodeURIComponent(OFFICIAL_SHEET_NAME)}&t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+
+    function renderMatchDetailsFromSheetRows(rows) {
+      const grouped = {};
+      MATCHUPS.forEach(m => {
+        grouped[m.id] = { red: {}, blue: {} };
+      });
+
+      (rows || []).forEach(row => {
+        const c = row && row.c ? row.c : [];
+        const dept = String((c[2] && c[2].v) || '順立').trim();
+        const name = String((c[3] && c[3].v) || '').trim();
+        if (!name || name === '姓名') return;
+        const key = dept + '・' + name;
+
+        MATCHUPS.forEach(m => {
+          const redIdx = 6 + (m.id - 1) * 2;
+          const blueIdx = 7 + (m.id - 1) * 2;
+          const redCount = Number((c[redIdx] && c[redIdx].v) || 0);
+          const blueCount = Number((c[blueIdx] && c[blueIdx].v) || 0);
+
+          if (redCount > 0) {
+            if (!grouped[m.id].red[key]) {
+              grouped[m.id].red[key] = { dept, name, bets: 0, entries: 0 };
+            }
+            grouped[m.id].red[key].bets += redCount;
+            grouped[m.id].red[key].entries += 1;
+          }
+          if (blueCount > 0) {
+            if (!grouped[m.id].blue[key]) {
+              grouped[m.id].blue[key] = { dept, name, bets: 0, entries: 0 };
+            }
+            grouped[m.id].blue[key].bets += blueCount;
+            grouped[m.id].blue[key].entries += 1;
+          }
+        });
+      });
+
+      paintMatchDetails(grouped, 'cloud');
+    }
+
+    function getLocalSubmissionsList() {
+      try {
+        const saved = localStorage.getItem('shunli_pk_submissions_2026');
+        return saved ? JSON.parse(saved) : (submissions || []);
+      } catch (e) {
+        return submissions || [];
+      }
+    }
+
+    function renderMatchDetailsFromMap(matchDetailsMap, sourceType) {
+      const grouped = {};
+      MATCHUPS.forEach(m => {
+        grouped[m.id] = { red: {}, blue: {} };
+        const rawMatch = matchDetailsMap[m.id] || matchDetailsMap[String(m.id)] || {};
+        ['red', 'blue'].forEach(side => {
+          const arr = Array.isArray(rawMatch[side]) ? rawMatch[side] : [];
+          arr.forEach(item => {
+            const dept = String(item.dept || '順立').trim();
+            const name = String(item.name || '').trim();
+            const count = Number(item.count || item.bets || 0);
+            if (!name || count <= 0) return;
+            const key = dept + '・' + name;
+            if (!grouped[m.id][side][key]) {
+              grouped[m.id][side][key] = { dept, name, bets: 0, entries: 0 };
+            }
+            grouped[m.id][side][key].bets += count;
+            grouped[m.id][side][key].entries += Number(item.entries || 1);
+          });
+        });
+      });
+      paintMatchDetails(grouped, sourceType);
+    }
+
+    function renderMatchDetails(subList, sourceType) {
+      const grouped = {};
+      MATCHUPS.forEach(m => {
+        grouped[m.id] = { red: {}, blue: {} };
+      });
+
+      (subList || []).forEach(sub => {
+        const dept = String(sub.dept || '順立').trim();
+        const name = String(sub.name || '').trim();
+        if (!name) return;
+        const key = dept + '・' + name;
+
+        if (Array.isArray(sub.details)) {
+          sub.details.forEach(d => {
+            const mid = Number(d.matchId);
+            const side = d.side === 'red' ? 'red' : (d.side === 'blue' ? 'blue' : '');
+            const count = Number(d.count || 0);
+            if (grouped[mid] && side && count > 0) {
+              if (!grouped[mid][side][key]) {
+                grouped[mid][side][key] = { dept, name, bets: 0, entries: 0 };
+              }
+              grouped[mid][side][key].bets += count;
+              grouped[mid][side][key].entries += 1;
+            }
+          });
+        }
+      });
+
+      paintMatchDetails(grouped, sourceType);
+    }
+
+    function escapeHtmlText(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function paintMatchDetails(grouped, sourceType) {
+      lastDetailsData = grouped;
+      lastDetailsSource = sourceType;
+      const badge = document.getElementById('details-source-badge');
+      if (badge) {
+        if (sourceType === 'cloud') {
+          badge.innerText = '雲端同步';
+          badge.className = 'text-[10px] bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded-full font-bold';
+        } else {
+          badge.innerText = '本機紀錄';
+          badge.className = 'text-[10px] bg-amber-500/20 border border-amber-500/40 text-amber-300 px-2 py-0.5 rounded-full font-bold';
+        }
+      }
+
+      const container = document.getElementById('details-container');
+      if (!container) return;
+
+      container.innerHTML = MATCHUPS.map(m => {
+        const redList = Object.values(grouped[m.id].red).sort((a, b) => b.bets - a.bets || a.name.localeCompare(b.name, 'zh-Hant'));
+        const blueList = Object.values(grouped[m.id].blue).sort((a, b) => b.bets - a.bets || a.name.localeCompare(b.name, 'zh-Hant'));
+
+        const localRedBets = redList.reduce((acc, u) => acc + u.bets, 0);
+        const localBlueBets = blueList.reduce((acc, u) => acc + u.bets, 0);
+        const cloudMatch = window.cloudTotals && window.cloudTotals[m.id] ? window.cloudTotals[m.id] : null;
+        const displayRedBets = sourceType === 'cloud' ? localRedBets : (cloudMatch ? (cloudMatch.red || 0) : localRedBets);
+        const displayBlueBets = sourceType === 'cloud' ? localBlueBets : (cloudMatch ? (cloudMatch.blue || 0) : localBlueBets);
+        const isExpanded = expandedDetailCards.has(m.id);
+
+        const renderSideList = (list, colorClass) => {
+          if (list.length === 0) {
+            return `<div class="text-[11px] text-gray-500 py-2 text-center bg-black/20 rounded-lg">尚無下注紀錄</div>`;
+          }
+          return list.map(u => `
+            <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-black/35 border border-gray-800/80 text-xs">
+              <div class="min-w-0 truncate">
+                <span class="text-[10px] text-gray-400 mr-1">${escapeHtmlText(u.dept)}</span>
+                <span class="font-bold text-white">${escapeHtmlText(u.name)}</span>
+                ${u.entries > 1 ? `<span class="text-[10px] text-amber-400/80 ml-1">(${u.entries}筆合併)</span>` : ''}
+              </div>
+              <span class="shrink-0 font-num font-black ${colorClass} px-2 py-0.5 rounded bg-black/50 border border-gray-800">${u.bets} 注</span>
+            </div>
+          `).join('');
+        };
+
+        return `
+          <div class="bg-black/40 rounded-xl border border-gray-800 overflow-hidden">
+            <button type="button" onclick="toggleDetailCard(${m.id})" class="w-full text-left p-3 hover:bg-white/5 transition flex items-center justify-between gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-black text-xs text-gold-gradient truncate">#${m.id} ${escapeHtmlText(m.title)}</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-[11px]">
+                  <span class="text-red-400 font-bold">
+                    紅方 ${escapeHtmlText(m.red.name)}：<strong class="text-white font-num">${displayRedBets}</strong> 注${redList.length > 0 ? ` (${redList.length}人)` : ''}
+                  </span>
+                  <span class="text-blue-400 font-bold">
+                    藍方 ${escapeHtmlText(m.blue.name)}：<strong class="text-white font-num">${displayBlueBets}</strong> 注${blueList.length > 0 ? ` (${blueList.length}人)` : ''}
+                  </span>
+                </div>
+              </div>
+              <i id="detail-chevron-${m.id}" class="fa-solid fa-chevron-down text-gray-400 text-xs shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}"></i>
+            </button>
+
+            <div id="detail-body-${m.id}" class="${isExpanded ? '' : 'hidden'} px-3 pb-3 pt-2 border-t border-gray-800/80 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="p-2.5 rounded-xl bg-red-950/20 border border-red-500/20 space-y-1.5">
+                <div class="flex items-center justify-between text-xs pb-1 border-b border-red-500/20">
+                  <span class="font-black text-red-400 truncate">紅方：${escapeHtmlText(m.red.name)}</span>
+                  <span class="text-[11px] text-gray-300 font-num shrink-0">${redList.length}人 / ${localRedBets}注</span>
+                </div>
+                <div class="space-y-1 max-h-52 overflow-y-auto pr-0.5">
+                  ${renderSideList(redList, 'text-red-300')}
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-xl bg-blue-950/20 border border-blue-500/20 space-y-1.5">
+                <div class="flex items-center justify-between text-xs pb-1 border-b border-blue-500/20">
+                  <span class="font-black text-blue-400 truncate">藍方：${escapeHtmlText(m.blue.name)}</span>
+                  <span class="text-[11px] text-gray-300 font-num shrink-0">${blueList.length}人 / ${localBlueBets}注</span>
+                </div>
+                <div class="space-y-1 max-h-52 overflow-y-auto pr-0.5">
+                  ${renderSideList(blueList, 'text-blue-300')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
   </script>
 </body>
